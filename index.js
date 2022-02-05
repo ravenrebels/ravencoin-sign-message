@@ -31,10 +31,37 @@ const { address } = bitcoin.payments.p2pkh({
 });
 
 var privateKey = keyPair.privateKey;
-var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+/*
+export function sign(
+  message: string | Buffer,
+  privateKey: Buffer | Signer,
+  compressed?: boolean,
+  messagePrefix?: string,
+  sigOptions?: SignatureOptions
+): Buffer;
+*/
+var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, RAVENCOIN_NETWORK.messagePrefix);
 const table = {
   address,
   message,
   signature: signature.toString("base64"),
 };
 console.table(table);
+/*
+export function verify(
+  message: string | Buffer,
+  address: string,
+  signature: string | Buffer,
+  messagePrefix?: string,
+  checkSegwitAlways?: boolean
+): boolean;
+
+*/
+const result = bitcoinMessage.verify(
+  message,
+  address,
+  signature,
+  RAVENCOIN_NETWORK.messagePrefix
+);
+
+console.log("Result", result);
