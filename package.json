@@ -1,0 +1,19 @@
+{
+  "name": "asdf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bitcoinjs-lib": "^6.0.1",
+    "bitcoinjs-message": "^2.2.0",
+    "coininfo": "^5.1.0",
+    "ecpair": "^2.0.1",
+    "tiny-secp256k1": "^2.2.0"
+  }
+}
