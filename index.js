@@ -1,12 +1,8 @@
 const bitcoin = require("bitcoinjs-lib");
 const bitcoinMessage = require("bitcoinjs-message");
 
-//coininfo gives us meta data about a bunch of crypto currencies, including Ravencoin
-const coininfo = require("coininfo");
-
-const { ECPairFactory } = require("ecpair");
-const ecc = require("tiny-secp256k1");
-const ECPair = ECPairFactory(ecc);
+const CoinKey = require("coinkey");
+const coininfo = require("coininfo"); //coininfo gives us meta data about a bunch of crypto currencies, including Ravencoin
 
 const frmt = coininfo.ravencoin.main.toBitcoinJS();
 const RAVENCOIN_NETWORK = {
@@ -21,16 +17,18 @@ const RAVENCOIN_NETWORK = {
 };
 
 const message = "This is an example of a signed message.";
-const privateKeyWIF = "KzukNMdpgEEfGUA4h5AByvAp7ANGALEVJxGc4uRSQatDLn5Qosq2";
+const privateKeyWIF = "KwTnXnJ4kbAf29wYEmXkB3xkCm8byYxg3hkPt8yhd37ofjwj7h8F";
 
-var keyPair = ECPair.fromWIF(privateKeyWIF, RAVENCOIN_NETWORK);
+//Import private key as WIF and set coinkey to use MAIN-net for Ravencoin
+const coinkey = CoinKey.fromWif(privateKeyWIF);
+coinkey.versions = coininfo("RVN").versions;
 
 const { address } = bitcoin.payments.p2pkh({
-  pubkey: keyPair.publicKey,
+  pubkey: coinkey.publicKey,
   network: RAVENCOIN_NETWORK,
 });
 
-var privateKey = keyPair.privateKey;
+const privateKey = coinkey.privateKey;
 /*
 export function sign(
   message: string | Buffer,
@@ -40,7 +38,12 @@ export function sign(
   sigOptions?: SignatureOptions
 ): Buffer;
 */
-var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, RAVENCOIN_NETWORK.messagePrefix);
+var signature = bitcoinMessage.sign(
+  message,
+  privateKey,
+  coinkey.compressed,
+  RAVENCOIN_NETWORK.messagePrefix
+);
 const table = {
   address,
   message,
